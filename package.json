@@ -1,0 +1,40 @@
+{
+  "name": "hardhat-typescript-template",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "npx hardhat run ./dist/scripts/deploy.js"
+  },
+  "author": "Zeeshan Hanif",
+  "license": "ISC",
+  "devDependencies": {
+    "@appliedblockchain/chainlink-plugins-fund-link": "0.0.3",
+    "@nomiclabs/hardhat-ethers": "^2.0.2",
+    "@nomiclabs/hardhat-etherscan": "^3.0.0",
+    "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "@onchain-id/identity-sdk": "^1.5.1",
+    "@openzeppelin/contracts": "^4.4.1",
+    "@typechain/ethers-v5": "^7.1.2",
+    "@typechain/hardhat": "^2.3.0",
+    "@types/chai": "^4.2.22",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^16.10.2",
+    "chai": "^4.3.4",
+    "crypto": "^1.0.1",
+    "dotenv": "^10.0.0",
+    "ethereum-waffle": "^3.4.0",
+    "ethers": "^5.4.7",
+    "hardhat": "^2.6.4",
+    "ts-node": "^10.2.1",
+    "typechain": "^5.1.2",
+    "typescript": "^4.4.3"
+  },
+  "dependencies": {
+    "@chainlink/contracts": "^0.2.2",
+    "@onchain-id/solidity": "^2.0.0-beta-2",
+    "@openzeppelin/contracts-upgradeable": "^4.6.0",
+    "hardhat-contract-sizer": "^2.1.1"
+  }
+}
