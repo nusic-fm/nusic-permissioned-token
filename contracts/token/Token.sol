@@ -36,8 +36,9 @@ import '../roles/AgentRoleUpgradeable.sol';
 import '@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol';
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
+import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 
-contract Token is IToken, AgentRoleUpgradeable, TokenStorage {
+contract Token is IToken, AgentRoleUpgradeable, TokenStorage, ERC165 {
     using Address for address;
     using Strings for uint256;
 
@@ -58,7 +59,6 @@ contract Token is IToken, AgentRoleUpgradeable, TokenStorage {
         address _compliance,
         string memory _name,
         string memory _symbol,
-        uint8 _decimals,
         address _onchainID
     ) public initializer {
         tokenName = _name;
@@ -82,6 +82,15 @@ contract Token is IToken, AgentRoleUpgradeable, TokenStorage {
     modifier whenPaused() {
         require(tokenPaused, 'Pausable: not paused');
         _;
+    }
+
+    /**
+     * @dev See {IERC165-supportsInterface}.
+     */
+    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC165, IERC165) returns (bool) {
+        return
+            interfaceId == type(IERC721).interfaceId ||
+            super.supportsInterface(interfaceId);
     }
 
     /**
@@ -698,7 +707,7 @@ contract Token is IToken, AgentRoleUpgradeable, TokenStorage {
     /**
      *  @dev See {IToken-burn}.
      */
-    function burn(address _userAddress, uint256[] memory _tokenIds) public onlyAgent {
+    function burn(address _userAddress, uint256[] memory _tokenIds) public override onlyAgent {
         for (uint256 i = 0; i < _tokenIds.length; i++) {
             bool tokenForzen = frozenTokens[_userAddress][_tokenIds[i]];
             if (tokenForzen) {
@@ -709,6 +718,19 @@ contract Token is IToken, AgentRoleUpgradeable, TokenStorage {
             tokenCompliance.destroyed(_userAddress, _tokenIds[i]);
         }
         
+    }
+
+    /**
+     *  @dev See {IToken-burn}.
+     */
+    function burn(address _userAddress, uint256 _tokenId) public override onlyAgent {
+        bool tokenForzen = frozenTokens[_userAddress][_tokenId];
+            if (tokenForzen) {
+                frozenTokens[_userAddress][_tokenId] = false;
+                emit TokensUnfrozen(_userAddress, _tokenId);
+            }
+            _burn(_tokenId);
+            tokenCompliance.destroyed(_userAddress, _tokenId);        
     }
 
     /** // Still needs to findout the right solution
@@ -753,6 +775,15 @@ contract Token is IToken, AgentRoleUpgradeable, TokenStorage {
     }
 
     /**
+     *  @dev See {IToken-freezePartialTokens}.
+     */
+    function freezePartialTokens(address _userAddress, uint256 _tokenId) public override onlyAgent {
+        require(_exists(_tokenId), "ERC721: operator query for nonexistent token");
+        frozenTokens[_userAddress][_tokenId] = true;
+        emit TokensFrozen(_userAddress, _tokenId);
+    }
+
+    /**
      *  @dev See {IToken-batchFreezePartialTokens}.
      */
     function batchFreezePartialTokens(address[] calldata _userAddresses, uint256[] calldata _tokenIds) external override {
@@ -772,6 +803,15 @@ contract Token is IToken, AgentRoleUpgradeable, TokenStorage {
             frozenTokens[_userAddress][_tokenIds[i]] = false;
             emit TokensUnfrozen(_userAddress, _tokenIds[i]);
         }
+    }
+
+    /**
+     *  @dev See {IToken-unfreezePartialTokens}.
+     */
+    function unfreezePartialTokens(address _userAddress, uint256 _tokenId) public override onlyAgent {
+        require(_exists(_tokenId), "ERC721: operator query for nonexistent token");
+        frozenTokens[_userAddress][_tokenId] = false;
+        emit TokensUnfrozen(_userAddress, _tokenId);
     }
 
     /** // need to work on >>>>>>>>..

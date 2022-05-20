@@ -196,7 +196,7 @@ contract DVDTransferManager is Ownable {
      */
     function modifyFee(address _token1, address _token2, uint _fee1, uint _fee2, uint _feeBase, address _fee1Wallet, address _fee2Wallet) external {
         require(msg.sender == owner() || isTREXOwner(_token1, msg.sender) || isTREXOwner(_token2, msg.sender), 'Ownable: only owner can call');
-        require(IERC20(_token1).totalSupply() != 0 && IERC20(_token2).totalSupply() != 0, 'invalid address : address is not an ERC20');
+        //require(IERC20(_token1).totalSupply() != 0 && IERC20(_token2).totalSupply() != 0, 'invalid address : address is not an ERC20');
         require(_fee1 <= 10**_feeBase && _fee1 >= 0 && _fee2 <= 10**_feeBase && _fee2 >= 0 && _feeBase <= 5 && _feeBase >= 2, 'invalid fee settings');
         if (_fee1 > 0) {
             require(_fee1Wallet != address(0), 'fee wallet 1 cannot be zero address');
@@ -239,10 +239,10 @@ contract DVDTransferManager is Ownable {
      *  emits a `DVDTransferInitiated` event
      */
     function initiateDVDTransfer(address _token1, uint256 _token1Amount, address _counterpart, address _token2, uint256 _token2Amount) external {
-        require(IERC20(_token1).balanceOf(msg.sender) >= _token1Amount, 'Not enough tokens in balance');
-        require(IERC20(_token1).allowance(msg.sender, address(this)) >= _token1Amount, 'not enough allowance to initiate transfer');
+        //require(IERC20(_token1).balanceOf(msg.sender) >= _token1Amount, 'Not enough tokens in balance');
+        //require(IERC20(_token1).allowance(msg.sender, address(this)) >= _token1Amount, 'not enough allowance to initiate transfer');
         require (_counterpart != address(0), 'counterpart cannot be null');
-        require(IERC20(_token2).totalSupply() != 0, 'invalid address : address is not an ERC20');
+        //require(IERC20(_token2).totalSupply() != 0, 'invalid address : address is not an ERC20');
         Delivery memory token1;
         token1.counterpart = msg.sender;
         token1.token = _token1;
@@ -276,6 +276,7 @@ contract DVDTransferManager is Ownable {
      *  emits a `DVDTransferExecuted` event
      */
     function takeDVDTransfer(bytes32 _transferID) external {
+        /*
         Delivery memory token1 = token1ToDeliver[_transferID];
         Delivery memory token2 = token2ToDeliver[_transferID];
         require(token1.counterpart != address(0) && token2.counterpart != address(0), 'transfer ID does not exist');
@@ -302,6 +303,7 @@ contract DVDTransferManager is Ownable {
         delete token1ToDeliver[_transferID];
         delete token2ToDeliver[_transferID];
         emit DVDTransferExecuted(_transferID);
+        */
     }
 
     /**

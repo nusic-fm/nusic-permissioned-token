@@ -156,14 +156,14 @@ contract AgentManager is AgentRoles {
      */
     function callBurn(
         address _userAddress,
-        uint256 _amount,
+        uint256 _tokenId,
         IIdentity _onchainID
     ) external {
         require(
             isSupplyModifier(address(_onchainID)) && _onchainID.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT Supply Modifier'
         );
-        token.burn(_userAddress, _amount);
+        token.burn(_userAddress, _tokenId);
     }
 
     /**
@@ -230,11 +230,11 @@ contract AgentManager is AgentRoles {
      */
     function callFreezePartialTokens(
         address _userAddress,
-        uint256 _amount,
+        uint256 _tokenId,
         IIdentity _onchainID
     ) external {
         require(isFreezer(address(_onchainID)) && _onchainID.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2), 'Role: Sender is NOT Freezer');
-        token.freezePartialTokens(_userAddress, _amount);
+        token.freezePartialTokens(_userAddress, _tokenId);
     }
 
     /**
@@ -264,11 +264,11 @@ contract AgentManager is AgentRoles {
      */
     function callUnfreezePartialTokens(
         address _userAddress,
-        uint256 _amount,
+        uint256 _tokenId,
         IIdentity _onchainID
     ) external {
         require(isFreezer(address(_onchainID)) && _onchainID.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2), 'Role: Sender is NOT Freezer');
-        token.unfreezePartialTokens(_userAddress, _amount);
+        token.unfreezePartialTokens(_userAddress, _tokenId);
     }
 
     /**

@@ -219,6 +219,15 @@ interface IToken is IERC721 {
     function freezePartialTokens(address _userAddress, uint256[] calldata _tokenIds) external;
 
    /**
+    *  @dev freezes token amount specified for given address.
+    *  @param _userAddress The address for which to update frozen tokens
+    *  @param _tokenId Token Id to be frozen
+    *  This function can only be called by a wallet set as agent of the token
+    *  emits a `TokensFrozen` event
+    */
+    function freezePartialTokens(address _userAddress, uint256 _tokenId) external;
+
+   /**
     *  @dev unfreezes token amount specified for given address
     *  @param _userAddress The address for which to update frozen tokens
     *  @param _tokenIds List of Tokens Ids to be unfrozen
@@ -226,6 +235,15 @@ interface IToken is IERC721 {
     *  emits a `TokensUnfrozen` event
     */
     function unfreezePartialTokens(address _userAddress, uint256[] calldata _tokenIds) external;
+
+   /**
+    *  @dev unfreezes token amount specified for given address
+    *  @param _userAddress The address for which to update frozen tokens
+    *  @param _tokenId Token Id to be unfrozen
+    *  This function can only be called by a wallet set as agent of the token
+    *  emits a `TokensUnfrozen` event
+    */
+    function unfreezePartialTokens(address _userAddress, uint256 _tokenId) external;
 
    /**
     *  @dev sets the Identity Registry for the token
@@ -283,6 +301,21 @@ interface IToken is IERC721 {
     *  emits a `Transfer` event
     */
     function burn(address _userAddress, uint256[] calldata _tokenIds) external;
+
+       /**
+    *  @dev burn tokens on a wallet
+    *  In case the `account` address has not enough free tokens (unfrozen tokens)
+    *  but has a total balance higher or equal to the `value` amount
+    *  the amount of frozen tokens is reduced in order to have enough free tokens
+    *  to proceed the burn, in such a case, the remaining balance on the `account`
+    *  is 100% composed of frozen tokens post-transaction.
+    *  @param _userAddress Address to burn the tokens from.
+    *  @param _tokenId Token id to be burn.
+    *  This function can only be called by a wallet set as agent of the token
+    *  emits a `TokensUnfrozen` event if `_amount` is higher than the free balance of `_userAddress`
+    *  emits a `Transfer` event
+    */
+    function burn(address _userAddress, uint256 _tokenId) external;
 
    /**
     *  @dev recovery function used to force transfer tokens from a
