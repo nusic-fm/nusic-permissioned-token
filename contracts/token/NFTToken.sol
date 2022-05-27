@@ -112,7 +112,7 @@ contract NFTToken is IToken, AgentRoleUpgradeable, TokenStorage, ERC165 {
      */
     function ownerOf(uint256 tokenId) public view virtual override returns (address) {
         address owner = _owners[tokenId];
-        require(owner != address(0), "ERC721: owner query for nonexistent token");
+        require(owner != address(0), "NFTToken: owner query for nonexistent token");
         return owner;
     }
 
@@ -142,11 +142,11 @@ contract NFTToken is IToken, AgentRoleUpgradeable, TokenStorage, ERC165 {
      */
     function approve(address to, uint256 tokenId) public virtual override {
         address owner = ownerOf(tokenId);
-        require(to != owner, "ERC721: approval to current owner");
+        require(to != owner, "NFTToken: approval to current owner");
 
         require(
             _msgSender() == owner || isApprovedForAll(owner, _msgSender()),
-            "ERC721: approve caller is not owner nor approved for all"
+            "NFTToken: approve caller is not owner nor approved for all"
         );
 
         _approve(to, tokenId);
@@ -156,7 +156,7 @@ contract NFTToken is IToken, AgentRoleUpgradeable, TokenStorage, ERC165 {
      * @dev See {IERC721-getApproved}.
      */
     function getApproved(uint256 tokenId) public view virtual override returns (address) {
-        require(_exists(tokenId), "ERC721: approved query for nonexistent token");
+        require(_exists(tokenId), "NFTToken: approved query for nonexistent token");
 
         return _tokenApprovals[tokenId];
     }
@@ -203,8 +203,8 @@ contract NFTToken is IToken, AgentRoleUpgradeable, TokenStorage, ERC165 {
         address to,
         uint256 tokenId
     ) internal virtual {
-        require(ownerOf(tokenId) == from, "ERC721: transfer from incorrect owner");
-        require(to != address(0), "ERC721: transfer to the zero address");
+        require(ownerOf(tokenId) == from, "NFTToken: transfer from incorrect owner");
+        require(to != address(0), "NFTToken: transfer to the zero address");
 
         _beforeTokenTransfer(from, to, tokenId);
 
@@ -240,7 +240,7 @@ contract NFTToken is IToken, AgentRoleUpgradeable, TokenStorage, ERC165 {
         address operator,
         bool approved
     ) internal virtual {
-        require(owner != operator, "ERC721: approve to caller");
+        require(owner != operator, "NFTToken: approve to caller");
         _operatorApprovals[owner][operator] = approved;
         emit ApprovalForAll(owner, operator, approved);
     }
@@ -266,7 +266,7 @@ contract NFTToken is IToken, AgentRoleUpgradeable, TokenStorage, ERC165 {
                 return retval == IERC721Receiver.onERC721Received.selector;
             } catch (bytes memory reason) {
                 if (reason.length == 0) {
-                    revert("ERC721: transfer to non ERC721Receiver implementer");
+                    revert("NFTToken: transfer to non ERC721Receiver implementer");
                 } else {
                     assembly {
                         revert(add(32, reason), mload(reason))
@@ -286,7 +286,7 @@ contract NFTToken is IToken, AgentRoleUpgradeable, TokenStorage, ERC165 {
      * - `tokenId` must exist.
      */
     function _isApprovedOrOwner(address spender, uint256 tokenId) internal view virtual returns (bool) {
-        require(_exists(tokenId), "ERC721: operator query for nonexistent token");
+        require(_exists(tokenId), "NFTToken: operator query for nonexistent token");
         address owner = ownerOf(tokenId);
         return (spender == owner || isApprovedForAll(owner, spender) || getApproved(tokenId) == spender);
     }
@@ -317,7 +317,7 @@ contract NFTToken is IToken, AgentRoleUpgradeable, TokenStorage, ERC165 {
         _mint(to, tokenId);
         require(
             _checkOnERC721Received(address(0), to, tokenId, data),
-            "ERC721: transfer to non ERC721Receiver implementer"
+            "NFTToken: transfer to non ERC721Receiver implementer"
         );
     }
 
@@ -334,8 +334,8 @@ contract NFTToken is IToken, AgentRoleUpgradeable, TokenStorage, ERC165 {
      * Emits a {Transfer} event.
      */
     function _mint(address to, uint256 tokenId) internal virtual {
-        require(to != address(0), "ERC721: mint to the zero address");
-        require(!_exists(tokenId), "ERC721: token already minted");
+        require(to != address(0), "NFTToken: mint to the zero address");
+        require(!_exists(tokenId), "NFTToken: token already minted");
 
         _beforeTokenTransfer(address(0), to, tokenId);
 
@@ -516,7 +516,7 @@ contract NFTToken is IToken, AgentRoleUpgradeable, TokenStorage, ERC165 {
      */
     function transfer(address _to, uint256 _tokenId) public whenNotPaused returns (bool) {
         require(!frozen[_to] && !frozen[msg.sender], 'wallet is frozen');
-        require(_isApprovedOrOwner(_msgSender(), _tokenId), "ERC721: transfer caller is not owner nor approved");
+        require(_isApprovedOrOwner(_msgSender(), _tokenId), "NFTToken: transfer caller is not owner nor approved");
         require(frozenTokens[msg.sender][_tokenId], 'Token is frozen');
         if (tokenIdentityRegistry.isVerified(_to) && tokenCompliance.canTransfer(msg.sender, _to, _tokenId)) {
             tokenCompliance.transferred(msg.sender, _to, _tokenId);
@@ -581,7 +581,7 @@ contract NFTToken is IToken, AgentRoleUpgradeable, TokenStorage, ERC165 {
         uint256 _tokenId
     ) external override whenNotPaused {
         require(!frozen[_to] && !frozen[_from], 'wallet is frozen');
-        require(_isApprovedOrOwner(_msgSender(), _tokenId), "ERC721: transfer caller is not owner nor approved");
+        require(_isApprovedOrOwner(_msgSender(), _tokenId), "NFTToken: transfer caller is not owner nor approved");
         require(frozenTokens[_from][_tokenId], 'Token is frozen');
         if (tokenIdentityRegistry.isVerified(_to) && tokenCompliance.canTransfer(_from, _to, _tokenId)) {
             tokenCompliance.transferred(_from, _to, _tokenId);
@@ -612,7 +612,7 @@ contract NFTToken is IToken, AgentRoleUpgradeable, TokenStorage, ERC165 {
         uint256 tokenId,
         bytes memory data
     ) public virtual override whenNotPaused {
-        require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721: transfer caller is not owner nor approved");
+        require(_isApprovedOrOwner(_msgSender(), tokenId), "NFTToken: transfer caller is not owner nor approved");
         _safeTransfer(from, to, tokenId, data);
     }
 
@@ -646,7 +646,7 @@ contract NFTToken is IToken, AgentRoleUpgradeable, TokenStorage, ERC165 {
             tokenCompliance.transferred(_from, _to, _tokenId);
             _transfer(_from, _to, _tokenId);
             _approve(msg.sender, _tokenId);
-            require(_checkOnERC721Received(_from, _to, _tokenId, _data), "ERC721: transfer to non ERC721Receiver implementer");
+            require(_checkOnERC721Received(_from, _to, _tokenId, _data), "NFTToken: transfer to non ERC721Receiver implementer");
         }
         revert('Transfer not possible');        
     }
@@ -769,7 +769,7 @@ contract NFTToken is IToken, AgentRoleUpgradeable, TokenStorage, ERC165 {
      */
     function freezePartialTokens(address _userAddress, uint256[] memory _tokenIds) public override onlyAgent {
         for (uint256 i = 0; i < _tokenIds.length; i++) {
-            require(_exists(_tokenIds[i]), "ERC721: operator query for nonexistent token");
+            require(_exists(_tokenIds[i]), "NFTToken: operator query for nonexistent token");
             frozenTokens[_userAddress][_tokenIds[i]] = true;
             emit TokensFrozen(_userAddress, _tokenIds[i]);
         }
@@ -780,7 +780,7 @@ contract NFTToken is IToken, AgentRoleUpgradeable, TokenStorage, ERC165 {
      *  @dev See {IToken-freezePartialTokens}.
      */
     function freezePartialTokens(address _userAddress, uint256 _tokenId) public override onlyAgent {
-        require(_exists(_tokenId), "ERC721: operator query for nonexistent token");
+        require(_exists(_tokenId), "NFTToken: operator query for nonexistent token");
         frozenTokens[_userAddress][_tokenId] = true;
         emit TokensFrozen(_userAddress, _tokenId);
     }
@@ -801,7 +801,7 @@ contract NFTToken is IToken, AgentRoleUpgradeable, TokenStorage, ERC165 {
      */
     function unfreezePartialTokens(address _userAddress, uint256[] memory _tokenIds) public override onlyAgent {
         for (uint256 i = 0; i < _tokenIds.length; i++) {
-            require(_exists(_tokenIds[i]), "ERC721: operator query for nonexistent token");
+            require(_exists(_tokenIds[i]), "NFTToken: operator query for nonexistent token");
             frozenTokens[_userAddress][_tokenIds[i]] = false;
             emit TokensUnfrozen(_userAddress, _tokenIds[i]);
         }
@@ -811,7 +811,7 @@ contract NFTToken is IToken, AgentRoleUpgradeable, TokenStorage, ERC165 {
      *  @dev See {IToken-unfreezePartialTokens}.
      */
     function unfreezePartialTokens(address _userAddress, uint256 _tokenId) public override onlyAgent {
-        require(_exists(_tokenId), "ERC721: operator query for nonexistent token");
+        require(_exists(_tokenId), "NFTToken: operator query for nonexistent token");
         frozenTokens[_userAddress][_tokenId] = false;
         emit TokensUnfrozen(_userAddress, _tokenId);
     }
