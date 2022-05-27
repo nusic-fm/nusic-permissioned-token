@@ -75,15 +75,19 @@ export default {
       url: `https://ropsten.infura.io/v3/${INFURA_KEY}`,
       accounts: [`0x${ROPSTEN_PRIVATE_KEY}`]
     },*/
+    /*
     rinkeby: {
       url: `https://eth-rinkeby.alchemyapi.io/v2/${ALCHEMY_KEY}`,
       accounts: [`0x${RINKEBY_PRIVATE_KEY}`]
+    },*/
+    rinkeby: {
+      url: `https://rinkeby.infura.io/v3/${ALCHEMY_KEY}`,
+      accounts: [`0x${RINKEBY_PRIVATE_KEY}`]
     },
-    /*
     kovan: {
       url: `https://kovan.infura.io/v3/${INFURA_KEY}`,
       accounts: [`0x${KOVAN_PRIVATE_KEY}`]
-    }*/
+    }
   },
   contractSizer: {
     alphaSort: true,
