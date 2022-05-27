@@ -60,4 +60,10 @@ contract TokenStorage {
 
     /// @dev Compliance contract linked to the onchain validator system
     ICompliance internal tokenCompliance;
+
+    string public baseURI;
+    uint256 public price = 2 ether;
+    uint256 public constant MAX_SUPPLY = 10000;
+
+
 }
