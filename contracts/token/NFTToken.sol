@@ -38,7 +38,7 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 
-contract Token is IToken, AgentRoleUpgradeable, TokenStorage, ERC165 {
+contract NFTToken is IToken, AgentRoleUpgradeable, TokenStorage, ERC165 {
     using Address for address;
     using Strings for uint256;
 
@@ -659,8 +659,8 @@ contract Token is IToken, AgentRoleUpgradeable, TokenStorage, ERC165 {
         address _to,
         uint256 _tokenId
     ) public override onlyAgent returns (bool) {
-        bool tokenForzen = frozenTokens[_from][_tokenId];
-        if (tokenForzen) {
+        bool tokenFrozen = frozenTokens[_from][_tokenId];
+        if (tokenFrozen) {
             frozenTokens[_from][_tokenId] = false;
             emit TokensUnfrozen(_from, _tokenId);
         }
@@ -711,8 +711,8 @@ contract Token is IToken, AgentRoleUpgradeable, TokenStorage, ERC165 {
      */
     function burn(address _userAddress, uint256[] memory _tokenIds) public override onlyAgent {
         for (uint256 i = 0; i < _tokenIds.length; i++) {
-            bool tokenForzen = frozenTokens[_userAddress][_tokenIds[i]];
-            if (tokenForzen) {
+            bool tokenFrozen = frozenTokens[_userAddress][_tokenIds[i]];
+            if (tokenFrozen) {
                 frozenTokens[_userAddress][_tokenIds[i]] = false;
                 emit TokensUnfrozen(_userAddress, _tokenIds[i]);
             }
@@ -726,8 +726,8 @@ contract Token is IToken, AgentRoleUpgradeable, TokenStorage, ERC165 {
      *  @dev See {IToken-burn}.
      */
     function burn(address _userAddress, uint256 _tokenId) public override onlyAgent {
-        bool tokenForzen = frozenTokens[_userAddress][_tokenId];
-            if (tokenForzen) {
+        bool tokenFrozen = frozenTokens[_userAddress][_tokenId];
+            if (tokenFrozen) {
                 frozenTokens[_userAddress][_tokenId] = false;
                 emit TokensUnfrozen(_userAddress, _tokenId);
             }
