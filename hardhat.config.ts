@@ -81,7 +81,7 @@ export default {
       accounts: [`0x${RINKEBY_PRIVATE_KEY}`]
     },*/
     rinkeby: {
-      url: `https://rinkeby.infura.io/v3/${ALCHEMY_KEY}`,
+      url: `https://rinkeby.infura.io/v3/${INFURA_KEY}`,
       accounts: [`0x${RINKEBY_PRIVATE_KEY}`]
     },
     kovan: {

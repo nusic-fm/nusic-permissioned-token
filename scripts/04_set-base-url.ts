@@ -11,8 +11,8 @@ async function main() {
 
     console.log("Token deployed to:", token.address);
 
-    const txt1 = await token.mint(owner.address,2);
-    console.log("Token mint transaction hash = ",txt1.hash);
+    const txt1 = await token.setBaseURI("https://bafkreigmxakqzongdk5knqgeslexzvtgs3g7zdvf7xdtsvoulkcytsatee.ipfs.nftstorage.link/");
+    console.log("Token set url transaction hash = ",txt1.hash);
     const receipt = await txt1.wait();
     //console.log("Token mint receipt = ",receipt);
 

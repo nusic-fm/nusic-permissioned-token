@@ -1,7 +1,7 @@
 import { BigNumber } from 'ethers';
 import { ethers } from 'hardhat';
 import { IdentitySDK } from '@onchain-id/identity-sdk';
-import { ClaimTopicsRegistry, ClaimTopicsRegistry__factory, DefaultCompliance, DefaultCompliance__factory, IdentityRegistry, IdentityRegistryStorage, IdentityRegistryStorage__factory, IdentityRegistry__factory, Token, Token__factory, TrustedIssuersRegistry, TrustedIssuersRegistry__factory } from '../typechain';
+import { ClaimTopicsRegistry, ClaimTopicsRegistry__factory, DefaultCompliance, DefaultCompliance__factory, IdentityRegistry, IdentityRegistryStorage, IdentityRegistryStorage__factory, IdentityRegistry__factory, NFTToken, NFTToken__factory, TrustedIssuersRegistry, TrustedIssuersRegistry__factory } from '../typechain';
 
 async function main() {
     const [owner, add1] = await ethers.getSigners();
@@ -32,8 +32,8 @@ async function main() {
     await identityRegistry.deployed();
     console.log("IdentityRegistry deployed to:", identityRegistry.address);
 
-    const Token:Token__factory = await ethers.getContractFactory("Token");
-    const token:Token = await Token.deploy();
+    const Token:NFTToken__factory = await ethers.getContractFactory("NFTToken");
+    const token:NFTToken = await Token.deploy();
     await token.deployed();
     console.log("Token deployed to:", token.address);
 

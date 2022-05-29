@@ -30,7 +30,7 @@ async function main() {
     console.log("Identity 2 Address = ", identity2.address);
 
     const IdentityRegistry:IdentityRegistry__factory = await ethers.getContractFactory("IdentityRegistry");
-    const identityRegistry:IdentityRegistry = await IdentityRegistry.attach("0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9");
+    const identityRegistry:IdentityRegistry = await IdentityRegistry.attach("0x5f7a40cBDfe614D6e233dd00c7D828e60a686Fb7");
     console.log("IdentityRegistry deployed to:", identityRegistry.address);
 
     //console.log(await identityRegistry.isAgent(owner.address));
